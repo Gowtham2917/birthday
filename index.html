@@ -1,0 +1,556 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Happy Birthday Nived 🎂</title>
+
+    <!-- Favicon -->
+    <link rel="icon" href="assets/images/favicon.ico">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;800&family=Cinzel+Decorative:wght@400;700&family=Dancing+Script:wght@600&family=Great+Vibes&display=swap" rel="stylesheet">
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="Css/style.css">
+
+    <!-- Confetti library -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+
+    <style>
+        /* ==============================
+           PAGE TRANSITION
+        ============================== */
+
+        #introPage {
+            position: relative;
+            width: 100%;
+            min-height: 100vh;
+            min-height: 100dvh;
+            overflow: hidden;
+            background: #08091b;
+            z-index: 10;
+        }
+
+        #birthdayPage {
+            display: none;
+            position: relative;
+            width: 100%;
+            min-height: 100vh;
+        }
+
+        #birthdayPage.active {
+            display: block;
+        }
+
+        #introPage.hidden {
+            display: none;
+        }
+
+        /* Intro canvas */
+        #introPage #c {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+
+        /* Music button */
+        #introPage .Tombol {
+            position: fixed;
+            top: 20px;
+            left: 15px;
+            z-index: 20;
+            cursor: pointer;
+        }
+
+        #introPage .Tombol img {
+            width: 48px;
+            height: 48px;
+            object-fit: contain;
+        }
+
+        /* Continue button */
+        .intro-continue {
+            position: fixed;
+            bottom: 35px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 30;
+
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+
+            padding: 15px 28px;
+            border: 1px solid rgba(255, 255, 255, 0.45);
+            border-radius: 50px;
+
+            color: #fff;
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+
+            font-family: 'Poppins', sans-serif;
+            font-size: 14px;
+            font-weight: 800;
+            text-decoration: none;
+            white-space: nowrap;
+
+            box-shadow: 0 0 25px rgba(255, 255, 255, 0.12);
+            transition: background 0.3s, color 0.3s, box-shadow 0.3s;
+        }
+
+        .intro-continue:hover {
+            color: #17132c;
+            background: #fff;
+            box-shadow: 0 0 35px rgba(255, 255, 255, 0.4);
+        }
+
+        /* Intro heading */
+        .intro-caption {
+            position: absolute;
+            top: 20%;
+            left: 0;
+            width: 100%;
+            z-index: 5;
+            padding: 0 16px;
+            text-align: center;
+            pointer-events: none;
+            color: white;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .intro-caption h1 {
+            margin: 0 0 12px;
+            font-size: clamp(28px, 6vw, 56px);
+            font-weight: 800;
+            text-shadow: 0 0 20px rgba(255, 190, 240, 0.65);
+        }
+
+        .intro-caption p {
+            margin: 0;
+            font-size: clamp(13px, 2.8vw, 18px);
+        }
+
+        /* Hide the second page until the transition */
+        #birthdayPage {
+            display: none;
+        }
+
+        #birthdayPage.active {
+            display: block;
+            animation: birthdayReveal 0.9s ease both;
+        }
+
+        @keyframes birthdayReveal {
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .intro-continue {
+                bottom: 25px;
+                padding: 13px 20px;
+                font-size: 12px;
+            }
+
+            .intro-caption {
+                top: 24%;
+            }
+
+            #introPage .Tombol img {
+                width: 40px;
+                height: 40px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            #birthdayPage.active {
+                animation: none;
+            }
+
+            .intro-continue {
+                transition: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ==================================================
+         PAGE 1: FIREWORKS INTRO
+    ================================================== -->
+
+    <section id="introPage" aria-label="Birthday introduction">
+
+        <!-- Music toggle -->
+        <div class="Tombol" id="musicButton" title="Toggle birthday music">
+            <img src="assets/images/sound-icon.png" alt="Toggle birthday music">
+        </div>
+
+        <!-- Birthday song -->
+        <audio
+            id="audioTombol"
+            src="assets/audio/birthday-song.mp3"
+            loop
+            preload="auto">
+        </audio>
+
+        <!-- Fireworks canvas -->
+        <canvas id="c"></canvas>
+
+        <!-- Intro text -->
+        <div class="intro-caption">
+            <h1> Nived! 🎂</h1>
+            <p>✨ Bro Forever ✨</p>
+        </div>
+        
+        <!-- Continue to birthday website -->
+        <button class="intro-continue" id="continueButton" type="button">
+            Open Your Birthday Surprise ✨
+        </button>
+
+    </section>
+
+
+    <!-- ==================================================
+         PAGE 2: MAIN BIRTHDAY WEBSITE
+    ================================================== -->
+
+    <div id="birthdayPage">
+
+        <!-- Background scenery -->
+        <div class="moon" aria-hidden="true"></div>
+        <div class="cloud c1" aria-hidden="true"></div>
+        <div class="cloud c2" aria-hidden="true"></div>
+        <canvas id="bg" aria-hidden="true"></canvas>
+        <div class="hills" aria-hidden="true"></div>
+
+        <!-- Hero -->
+        <header class="hero">
+
+            <img
+                class="bunting"
+                src="img/banner.png"
+                alt="Happy birthday bro">
+
+            <div class="portrait tilt" data-depth="1">
+                <img src="img/user.jpeg" alt="Nived">
+
+                <i class="spark s1" aria-hidden="true">✦</i>
+                <i class="spark s2" aria-hidden="true">✧</i>
+                <i class="spark s3" aria-hidden="true">✦</i>
+                <i class="spark s4" aria-hidden="true">✧</i>
+            </div>
+
+            <h1 class="typewrap" aria-live="polite">
+                <span id="typewriter"></span>
+                <i class="cursor" aria-hidden="true"></i>
+            </h1>
+
+            <p class="hero-name">Nived</p>
+
+            <a
+                class="scroll-hint"
+                href="#letter"
+                aria-label="Scroll to your letter">
+                scroll down
+            </a>
+
+        </header>
+
+
+        <main>
+
+            <!-- Birthday letter -->
+            <section class="wrap" id="letter" data-r>
+
+                <div class="letter tilt">
+                    <span class="heart" aria-hidden="true">❤️</span>
+
+                    <h2>Hey, Nived</h2>
+
+                    <p style="--d:.1s">
+                        hi, 
+                    </p>
+
+                      <p style="--d:.25s">
+                          wishing you a <mark>happy birthday 🎉</mark>
+                      </p>
+
+                      <p style="--d:.4s">
+                        May life always give you reasons to smile and dreams to look forward to 🌸🍁
+                      </p>
+
+                      <p style="--d:.55s">
+                          may your day be filled with happiness,
+                          laughter, and sweet memories 🌺
+                      </p>
+
+                   
+                </div>
+
+            </section>
+
+
+            <!-- Birthday cake and wish -->
+            <section class="cake-sec wrap" data-r>
+
+                <div class="cake-stage">
+                    <span class="ring"></span>
+                    <img class="cake" src="img/cake.svg" alt="Birthday cake">
+                </div>
+
+                <button class="pill" id="wishBtn" type="button">
+                    Make a wish
+                </button>
+
+                <p class="wish" id="wishMsg" aria-live="polite"></p>
+
+            </section>
+
+
+            <!-- Photo memories -->
+            <section class="memories wrap" data-r>
+
+                <h2 class="sec-title">Moments</h2>
+
+                <div class="stack" id="stack" aria-label="Photo memories">
+
+                    <figure class="polaroid">
+                        <img src="img/1.jpeg" alt="Group selfie" draggable="false">
+                        <figcaption>the squad</figcaption>
+                    </figure>
+
+                    <figure class="polaroid">
+                        <img src="img/2.jpeg" alt="Friends in class" draggable="false">
+                        <figcaption>homie</figcaption>
+                    </figure>
+
+                    <figure class="polaroid">
+                        <img src="img/3.jpeg" alt="Friends on the steps" draggable="false">
+                        <figcaption>buddy</figcaption>
+                    </figure>
+
+                    <figure class="polaroid">
+                        <img src="img/4.jpeg" alt="Friends lined up outside" draggable="false">
+                        <figcaption>just bros</figcaption>
+                    </figure>
+
+                </div>
+
+                <div class="ctrl">
+                    <button
+                        id="prevImg"
+                        class="round"
+                        type="button"
+                        aria-label="Previous photo">
+                        ‹
+                    </button>
+
+                    <span id="count" class="count">1 / 4</span>
+
+                    <button
+                        id="nextImg"
+                        class="round"
+                        type="button"
+                        aria-label="Next photo">
+                        ›
+                    </button>
+                </div>
+
+            </section>
+
+
+            <!-- Final birthday card -->
+            <section class="final wrap" data-r>
+
+                <h2 class="sec-title">Secret Message</h2>
+
+                <div class="card-wrap tilt" id="cardContainer">
+
+                    <div class="card" id="card">
+
+                        <div class="side front">
+                        
+                            <h3>Happy Birthday</h3>
+
+                            <p>A little note I wanted you to know🤍</p>
+
+                            <img src="img/cake.svg" alt="">
+
+                            <button
+                                class="pill dark"
+                                id="toggleButton"
+                                type="button">
+                                Open card
+                            </button>
+                        </div>
+
+                        <div class="side back">
+                            <h3>Happy Birthday</h3>
+
+                            <p>
+                                Once again, Happy Birthday, brooo ❤️🫂
+                                <br/>
+                                Somewhere along the way, you became someone I started seeing as my own brother, and I’m genuinely glad that happened. ❤️
+                                <br/>
+                                I hope you’ll always have a little place for this chhota bhai in your life too. 😂🫂
+<br/>
+Honestly, even the simplest moments with you, be it random talks, watching a movie, playing something, or just hanging out, mean a lot to me. Sometimes, it’s the little moments thats all I ever want.❤️
+<br/>
+Forgive me if anything I did that hurted you.
+Stay happy, bhai. You deserve the best. ❤️🫂
+                            </p>
+                            <strong> - Gowtham</strong> 🍂
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+        </main>
+
+
+        <!-- Footer -->
+        <footer class="foot" data-r>
+            <p>Be healthy happy, stay awesome 🪔</p>
+            <small>Created with love by Gowtham</small>
+        </footer>
+
+        <!-- Decorative lanterns -->
+        <div id="lanterns" aria-hidden="true"></div>
+
+    </div>
+
+
+    <!-- ==================================================
+         JAVASCRIPT
+    ================================================== -->
+
+    <!-- Intro fireworks animation -->
+    <script src="assets/js/main.js"></script>
+
+    <script>
+        /* ===============================================
+           PAGE TRANSITION
+        =============================================== */
+
+        const introPage = document.getElementById("introPage");
+        const birthdayPage = document.getElementById("birthdayPage");
+        const continueButton = document.getElementById("continueButton");
+
+        let birthdayScriptsLoaded = false;
+
+        function openBirthdayPage() {
+            if (birthdayPage.classList.contains("active")) return;
+
+            // Reveal the birthday website
+            introPage.classList.add("hidden");
+            birthdayPage.classList.add("active");
+
+            // Initialize the birthday website scripts only once
+            if (!birthdayScriptsLoaded) {
+                birthdayScriptsLoaded = true;
+
+                const backgroundScript = document.createElement("script");
+                backgroundScript.src = "background.js";
+
+                backgroundScript.onload = function () {
+                    // Load the main birthday interactions after
+                    // the background script has finished loading.
+                    const mainScript = document.createElement("script");
+                    mainScript.src = "main.js";
+                    document.body.appendChild(mainScript);
+                };
+
+                backgroundScript.onerror = function () {
+                    console.error("Could not load background.js");
+
+                    // Still load the main birthday interactions.
+                    const mainScript = document.createElement("script");
+                    mainScript.src = "main.js";
+                    document.body.appendChild(mainScript);
+                };
+
+                document.body.appendChild(backgroundScript);
+            }
+
+            // Start celebratory confetti
+            if (typeof confetti === "function") {
+                confetti({
+                    particleCount: 120,
+                    spread: 100,
+                    origin: { y: 0.6 }
+                });
+            }
+
+            // Start at the top of the birthday website
+            window.scrollTo({ top: 0, behavior: "auto" });
+        }
+
+        continueButton.addEventListener("click", openBirthdayPage);
+
+
+        /* ===============================================
+           BIRTHDAY MUSIC TOGGLE
+        =============================================== */
+
+        const musicButton = document.getElementById("musicButton");
+        const birthdayAudio = document.getElementById("audioTombol");
+
+        musicButton.addEventListener("click", async function () {
+            try {
+                if (birthdayAudio.paused) {
+                    await birthdayAudio.play();
+                    musicButton.setAttribute("aria-label", "Pause birthday music");
+                } else {
+                    birthdayAudio.pause();
+                    musicButton.setAttribute("aria-label", "Play birthday music");
+                }
+            } catch (error) {
+                console.error("Unable to play birthday music:", error);
+            }
+        });
+    </script>
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
